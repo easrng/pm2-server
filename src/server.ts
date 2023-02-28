@@ -134,19 +134,7 @@ const appRouter = router({
         input.process,
         input.packet
       );
-    }),
-  randomNumber: procedure.subscription(() => {
-    return observable((emit) => {
-      const timer = setInterval(() => {
-        // emits a number every second
-        emit.next({ randomNumber: Math.random() });
-      }, 200);
-
-      return () => {
-        clearInterval(timer);
-      };
-    });
-  }),
+    })
 });
 export type AppRouter = typeof appRouter;
 
