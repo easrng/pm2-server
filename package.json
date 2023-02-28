@@ -1,6 +1,6 @@
 {
   "name": "pm2-server",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "provides access to the pm2 api over trpc",
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
   },
   "scripts": {
     "format": "prettier -w ./*.json ./src/*.ts ./scripts/*.js && git add ./*.json ./src/*.ts ./scripts/*.js",
-    "build": "tsc",
+    "build": "tsc && chmod +x ./dist/server.js",
     "start": "node ./dist/server.js"
   },
   "bin": {

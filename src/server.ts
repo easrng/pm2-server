@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { initTRPC } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import express from "express";
