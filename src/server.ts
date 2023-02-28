@@ -5,6 +5,9 @@ import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 import pm2 from "pm2";
 import util from "node:util";
+import basicAuth from "express-basic-auth";
+import sp from "sodium-plus";
+const { SodiumPlus } = sp;
 
 await util.promisify(pm2.connect.bind(pm2))();
 
@@ -134,11 +137,21 @@ const appRouter = router({
         input.process,
         input.packet
       );
-    })
+    }),
 });
 export type AppRouter = typeof appRouter;
 
+const getPasswordHashOrThrow = () => {
+  const passwordHash = process.env.PASSWORD_HASH;
+  if (!passwordHash) {
+    console.error("set PASSWORD_HASH");
+    process.exit(1);
+  }
+  return passwordHash;
+};
+getPasswordHashOrThrow(); // fail early
 const app = express();
+const sodium = await SodiumPlus.auto();
 app.use(
   (req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -152,6 +165,23 @@ app.use(
       next();
     }
   },
+  basicAuth({
+    authorizeAsync: true,
+    authorizer: async (username, password, authorize) => {
+      try {
+        if (username !== "pm2") return authorize(null, false);
+        const passwordMatches = await sodium.crypto_pwhash_str_verify(
+          password,
+          getPasswordHashOrThrow()
+        );
+        return authorize(null, passwordMatches);
+      } catch (e) {
+        return authorize(e, false);
+      }
+    },
+    challenge: true,
+    realm: "pm2-server",
+  }),
   trpcExpress.createExpressMiddleware({
     router: appRouter,
     createContext,
