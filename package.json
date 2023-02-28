@@ -1,0 +1,49 @@
+{
+  "name": "pm2-server",
+  "version": "1.0.4",
+  "description": "provides access to the pm2 api over trpc",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/easrng/pm2-server.git"
+  },
+  "keywords": [
+    "pm2",
+    "remote",
+    "trpc",
+    "monitoring"
+  ],
+  "author": "easrng",
+  "license": "SEE LICENSE IN be gay do crime",
+  "bugs": {
+    "url": "https://github.com/easrng/pm2-server/issues"
+  },
+  "homepage": "https://github.com/easrng/pm2-server#readme",
+  "dependencies": {
+    "@trpc/server": "^10.13.2",
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.14.2",
+    "express": "^4.18.2",
+    "pm2": "^5.2.2",
+    "zod": "^3.20.6"
+  },
+  "devDependencies": {
+    "pre-commit": "^1.2.2",
+    "prettier": "^2.8.4",
+    "terser": "^5.16.5",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "format": "prettier -w ./*.json ./src/*.ts && git add ./*.json ./src/*.ts",
+    "build": "tsc",
+    "start": "node ./dist/server.js"
+  },
+  "pre-commit": [
+    "format"
+  ],
+  "type": "module",
+  "main": "./dist/server.js",
+  "types": "./dist/server.d.ts",
+  "files": [
+    "dist"
+  ]
+}
